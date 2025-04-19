@@ -47,3 +47,31 @@ def get_players_stats(season):
 
     return df.reset_index(drop=True)
 
+def get_teams_stats(season):
+    """Pobiera i czyści dane z 'Advanced Team Stats' z Basketball Reference"""
+    url = f"https://www.basketball-reference.com/leagues/NBA_{season}.html"
+    table_id = "advanced-team"
+
+    df = get_table_by_id(url, table_id)
+    
+    # Spłaszczenie MultiIndex
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [' '.join(col).strip() for col in df.columns.values]
+    else:
+        df.columns = df.columns.str.strip()
+
+    # 🧼 Usuń 'Unnamed:' z kolumn, ale zostaw te z prefixem np. 'Offense Four Factors'
+    df.columns = [col if not col.startswith('Unnamed') else col.split(' ')[-1] for col in df.columns]
+
+    # Usuń kolumny gdzie wszystkie wartości są NaN (kolumny techniczne)
+    null_cols = df.columns[df.isna().all()]
+    df.drop(columns=null_cols, inplace=True, errors='ignore')
+
+    df.drop(columns=[
+    'Rk', 'Age', 'PW', 'PL', 'Arena', 'Attend.', 'Attend./G'
+    ], errors='ignore', inplace=True)
+
+
+
+    return df
+
