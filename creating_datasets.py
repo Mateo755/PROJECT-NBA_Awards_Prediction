@@ -42,5 +42,8 @@ def get_players_stats(season):
     df.drop(columns=['Rk_per_game', 'Rk_adv'], errors='ignore', inplace=True)
     df.drop(columns=['G_adv', 'GS_adv' ], errors='ignore', inplace=True)
 
+    df.drop(columns=['Awards_per_game', 'Awards_adv'], errors='ignore', inplace=True)
+
+
     return df.reset_index(drop=True)
 
