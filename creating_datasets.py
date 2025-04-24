@@ -1,5 +1,10 @@
-from get_table_by_id import get_table_by_id
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+
+from get_table_by_id import get_table_by_id
+from extract_from_commented_html import extract_from_commented_html
+
 
 
 def get_players_stats(season):
@@ -75,3 +80,53 @@ def get_teams_stats(season):
 
     return df
 
+
+
+def get_award_counts(season):
+
+    season_int = int(season)
+    season_label = f"{season_int - 1}-{str(season_int)[-2:]}"  # np. 2019-20
+
+    url = "https://www.basketball-reference.com/leagues/NBA_2020.html"
+    res = requests.get(url)
+    res.encoding = "utf-8"
+
+    soup = BeautifulSoup(res.text, "html.parser")
+
+    section = extract_from_commented_html(soup, "players_of_the_week_and_month")
+    if section is None:
+        print(f"Nie znaleziono sekcji 'players_of_the_week_and_month' w sezonie {season_label}.")
+        return pd.DataFrame()
+
+    potw, potm, rotm = [], [], []
+    current_award = ""
+
+    for tag in section.find_all(["h3", "a"]):
+        text = tag.get_text().lower()
+        if tag.name == "h3":
+            if "players of the week" in text:
+                current_award = "potw"
+            elif "players of the month" in text and "rookie" not in text:
+                current_award = "potm"
+            elif "rookies of the month" in text:
+                current_award = "rotm"
+            else:
+                current_award = ""
+
+        elif tag.name == "a":
+            player = text.title()
+            if current_award == "potw":
+                potw.append(player)
+            elif current_award == "potm":
+                potm.append(player)
+            elif current_award == "rotm":
+                rotm.append(player)
+
+    #print(f"Znaleziono {len(potw)} graczy tygodnia, {len(potm)} graczy miesiąca i {len(rotm)} debiutantów miesiąca w sezonie {season_label}.")
+    df = pd.DataFrame()
+    df["Player"] = list(set(potw + potm + rotm))
+    df["potw_count"] = df["Player"].apply(lambda x: potw.count(x))
+    df["potm_count"] = df["Player"].apply(lambda x: potm.count(x))
+    df["rookie_of_month_count"] = df["Player"].apply(lambda x: rotm.count(x))
+
+    return df

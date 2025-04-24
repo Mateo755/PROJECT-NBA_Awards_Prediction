@@ -1,8 +1,9 @@
+import requests
+from bs4 import BeautifulSoup, Comment
+import pandas as pd
+
 def get_table_by_id(url, table_id):
     """Pobiera tabelę z Basketball Reference po ID, także jeśli jest ukryta w komentarzach"""
-    import requests
-    from bs4 import BeautifulSoup, Comment
-    import pandas as pd
 
     # Pobieramy stronę
     # i parsujemy HTML
