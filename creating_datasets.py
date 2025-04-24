@@ -65,7 +65,7 @@ def get_teams_stats(season):
     else:
         df.columns = df.columns.str.strip()
 
-    # 🧼 Usuń 'Unnamed:' z kolumn, ale zostaw te z prefixem np. 'Offense Four Factors'
+    # Usuń 'Unnamed:' z kolumn, ale zostaw te z prefixem np. 'Offense Four Factors'
     df.columns = [col if not col.startswith('Unnamed') else col.split(' ')[-1] for col in df.columns]
 
     # Usuń kolumny gdzie wszystkie wartości są NaN (kolumny techniczne)
@@ -130,3 +130,27 @@ def get_award_counts(season):
     df["rookie_of_month_count"] = df["Player"].apply(lambda x: rotm.count(x))
 
     return df
+
+
+def get_rookie_players(season):
+    url = f"https://www.basketball-reference.com/leagues/NBA_{season}_rookies.html"
+    df = get_table_by_id(url, "rookies")
+
+    # Spłaszczenie MultiIndex
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [' '.join(col).strip() for col in df.columns.values]
+    else:
+        df.columns = df.columns.str.strip()
+    df.columns
+
+    # Usuń 'Unnamed:' z kolumn, ale zostaw te z prefixem np. 'Offense Four Factors'
+    df.columns = [col if not col.startswith('Unnamed') else col.split(' ')[-1] for col in df.columns]
+
+
+    # Zostaw tylko kolumnę Player i usuń duplikaty
+    df = df[["Player"]].copy()
+    df["Player"] = df["Player"].str.strip()
+    df = df.drop_duplicates().reset_index(drop=True)
+
+    return df
+
