@@ -5,6 +5,39 @@ from bs4 import BeautifulSoup
 from get_table_by_id import get_table_by_id
 from extract_from_commented_html import extract_from_commented_html
 
+TEAM_NAME_MAP = {
+    "Atlanta Hawks": "ATL",
+    "Boston Celtics": "BOS",
+    "Brooklyn Nets": "BRK",  
+    "Charlotte Hornets": "CHO",
+    "Chicago Bulls": "CHI",
+    "Cleveland Cavaliers": "CLE",
+    "Dallas Mavericks": "DAL",
+    "Denver Nuggets": "DEN",
+    "Detroit Pistons": "DET",
+    "Golden State Warriors": "GSW",
+    "Houston Rockets": "HOU",
+    "Indiana Pacers": "IND",
+    "Los Angeles Clippers": "LAC",
+    "Los Angeles Lakers": "LAL",
+    "Memphis Grizzlies": "MEM",
+    "Miami Heat": "MIA",
+    "Milwaukee Bucks": "MIL",
+    "Minnesota Timberwolves": "MIN",
+    "New Orleans Pelicans": "NOP",
+    "New York Knicks": "NYK",
+    "Oklahoma City Thunder": "OKC",
+    "Orlando Magic": "ORL",
+    "Philadelphia 76ers": "PHI",
+    "Phoenix Suns": "PHO",
+    "Portland Trail Blazers": "POR",
+    "Sacramento Kings": "SAC",
+    "San Antonio Spurs": "SAS",
+    "Toronto Raptors": "TOR",
+    "Utah Jazz": "UTA",
+    "Washington Wizards": "WAS"
+}
+
 
 
 def get_players_stats(season):
@@ -75,6 +108,11 @@ def get_teams_stats(season):
     df.drop(columns=[
     'Rk', 'Age', 'PW', 'PL', 'Arena', 'Attend.', 'Attend./G'
     ], errors='ignore', inplace=True)
+
+    df = df[df["Team"] != "League Average"]
+    df["Team"] = df["Team"].str.replace("*", "", regex=False)
+
+    df["Team"] = df["Team"].map(TEAM_NAME_MAP)
 
 
 
