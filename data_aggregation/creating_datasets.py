@@ -35,7 +35,10 @@ TEAM_NAME_MAP = {
     "San Antonio Spurs": "SAS",
     "Toronto Raptors": "TOR",
     "Utah Jazz": "UTA",
-    "Washington Wizards": "WAS"
+    "Washington Wizards": "WAS",
+    "New Orleans Hornets": "NOH",
+    "Charlotte Bobcats": "CHA",
+    "New Jersey Nets": "NJN"
 }
 
 
