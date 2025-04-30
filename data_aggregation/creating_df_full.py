@@ -1,10 +1,10 @@
-from creating_datasets import get_players_stats, get_teams_stats, get_award_counts, get_rookie_players
-from creating_target_data import build_awards_column, get_all_nba_team, get_all_rookie_team
-from multi_team_simple_average import resolve_multi_team_simple_average
+from .creating_datasets import get_players_stats, get_teams_stats, get_award_counts, get_rookie_players
+from .creating_target_data import build_awards_column, get_all_nba_team, get_all_rookie_team
+from .multi_team_simple_average import resolve_multi_team_simple_average
 import pandas as pd
 
 
-def build_features_dataset(last_season: int, n_seasons: int, return_full=False):
+def build_full_dataset(last_season: int, n_seasons: int, return_full=False):
     """
     Tworzy pełny dataset cech (X) i etykiet (y) do klasyfikacji All-NBA / All-Rookie.
     

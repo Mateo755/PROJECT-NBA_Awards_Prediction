@@ -2,8 +2,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from get_table_by_id import get_table_by_id
-from extract_from_commented_html import extract_from_commented_html
+from .get_table_by_id import get_table_by_id
+from .extract_from_commented_html import extract_from_commented_html
 
 TEAM_NAME_MAP = {
     "Atlanta Hawks": "ATL",
