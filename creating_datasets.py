@@ -57,15 +57,12 @@ def get_players_stats(season):
     advanced.columns = advanced.columns.str.strip()
 
     # 3. Dopasowanie wspólnych kolumn do merge
-    join_cols = [col for col in ["Player", "Pos", "Age", "Tm"]
+    join_cols = [col for col in ["Player", "Pos", "Age", "Team"]
                  if col in per_game.columns and col in advanced.columns]
 
     # 4. Merge
     df = pd.merge(per_game, advanced, on=join_cols, suffixes=('_per_game', '_adv'))
 
-    # 5. Usuń statystyki łączone (TOT)
-    if 'Tm' in df.columns:
-        df = df[df['Tm'] != 'TOT']
 
     # Zamiana nazwy Team_per_game -> Team
     # Usunięcie Team_adv (identyczne co Team_per_game)
@@ -81,9 +78,13 @@ def get_players_stats(season):
     df.drop(columns=['G_adv', 'GS_adv' ], errors='ignore', inplace=True)
 
     df.drop(columns=['Awards_per_game', 'Awards_adv'], errors='ignore', inplace=True)
+    df.drop(df.index[-1], errors='ignore', inplace=True) # Usunięcie ostatniego wiersza League Average
 
 
     return df.reset_index(drop=True)
+
+
+
 
 def get_teams_stats(season):
     """Pobiera i czyści dane z 'Advanced Team Stats' z Basketball Reference"""
