@@ -8,6 +8,7 @@ def get_table_by_id(url, table_id):
     # Pobieramy stronę
     # i parsujemy HTML
     res = requests.get(url)
+    res.encoding = "utf-8"
     soup = BeautifulSoup(res.text, "html.parser")
 
     # Szukamy tabeli wewnątrz komentarzy
