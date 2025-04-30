@@ -36,6 +36,7 @@ ilość sezonów
 
 from creating_datasets import get_players_stats, get_teams_stats, get_award_counts, get_rookie_players
 from creating_target_data import build_awards_column, get_all_nba_team, get_all_rookie_team
+from multi_team_simple_average import resolve_multi_team_simple_average
 import pandas as pd
 
 
@@ -67,14 +68,13 @@ def build_features_dataset(last_season: int, n_seasons: int, return_full=False):
         df_awards_target = build_awards_column(df_all_nba, df_all_rookie)
 
         # === 3. Merge danych cech ===
-        df = df_players.merge(df_teams, on="Team", how="left")
-        print(f"Merged players and teams {season}")
+        df = resolve_multi_team_simple_average(df_players, df_teams)
         df = df.merge(df_awards_signals, on="Player", how="left")
-        print(f"Merged players and awards {season}")
+        #print(f"Merged players and awards {season}")
         df = df.merge(df_rookies[["Player", "is_rookie"]], on="Player", how="left")
-        print(f"Merged players and rookies {season}")
+        #print(f"Merged players and rookies {season}")
         df = df.merge(df_awards_target, on="Player", how="left")
-        print(f"Merged players and awards target {season}")
+        #print(f"Merged players and awards target {season}")
 
         print(df.columns)
 
@@ -100,5 +100,3 @@ def build_features_dataset(last_season: int, n_seasons: int, return_full=False):
     else:
         return X, y
 
-
-X, y, df_full = build_features_dataset(last_season=2020, n_seasons=1, return_full=True)
