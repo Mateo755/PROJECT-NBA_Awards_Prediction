@@ -13,5 +13,5 @@ def extract_from_commented_html(soup: BeautifulSoup, id_contains: str) -> Beauti
         if id_contains in comment:
             return BeautifulSoup(comment, "html.parser")
     
-    print(f"❌ Nie znaleziono komentarza zawierającego '{id_contains}'")
+    print(f"Nie znaleziono komentarza zawierającego '{id_contains}'")
     return None

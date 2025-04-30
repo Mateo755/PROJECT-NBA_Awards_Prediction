@@ -1,39 +1,3 @@
-"""
-Merge players stats with team stats
-Add players awards 
-Merge target data or return X and y
-make a loop to go through number of seasons 
-
-PARAMS:
-sezon końcowy
-ilość sezonów
-"""
-
-# from creating_datasets import get_players_stats
-# import pandas as pd
-
-# df_players = get_players_stats("2020")
-# df_players.head()
-
-# from creating_datasets import get_teams_stats
-# df_teams = get_teams_stats("2020")
-# df_teams.head()
-
-# from creating_datasets import get_award_counts
-# df_awards = get_award_counts("2020")
-
-# from creating_datasets import get_rookie_players
-# df_rookies = get_rookie_players("2020")
-# df_rookies = get_rookie_players("2020")
-# df_players["is_rookie"] = df_players["Player"].isin(df_rookies["Player"])   
-
-# from creating_target_data import build_awards_column, get_all_nba_team, get_all_rookie_team
-
-# df_all_nba = get_all_nba_team("2020")
-# df_all_rookie = get_all_rookie_team("2020")
-# df_awards = build_awards_column(df_all_nba, df_all_rookie)
-# print(df_awards.head(25))
-
 from creating_datasets import get_players_stats, get_teams_stats, get_award_counts, get_rookie_players
 from creating_target_data import build_awards_column, get_all_nba_team, get_all_rookie_team
 from multi_team_simple_average import resolve_multi_team_simple_average
@@ -46,13 +10,13 @@ def build_features_dataset(last_season: int, n_seasons: int, return_full=False):
     
     :param last_season: ostatni sezon (np. 2024)
     :param n_seasons: liczba sezonów wstecz (np. 5 → 2020–2024)
-    :param return_full: jeśli True, zwraca też df_full (X + Player + Team + awards)
-    :return: X, y (i opcjonalnie df_full)
+    :param return_full: jeśli True, zwraca też df_full (X + Player + Team + awards + y)
+    :return: X, y 
     """
     all_dfs = []
 
     for season in range(last_season - n_seasons + 1, last_season + 1):
-        print(f"📦 Przetwarzanie sezonu {season}...")
+        print(f"Przetwarzanie sezonu {season}...")
 
         # === 1. Pobierz podstawowe dane ===
         df_players = get_players_stats(str(season))
@@ -70,19 +34,12 @@ def build_features_dataset(last_season: int, n_seasons: int, return_full=False):
         # === 3. Merge danych cech ===
         df = resolve_multi_team_simple_average(df_players, df_teams)
         df = df.merge(df_awards_signals, on="Player", how="left")
-        #print(f"Merged players and awards {season}")
         df = df.merge(df_rookies[["Player", "is_rookie"]], on="Player", how="left")
-        #print(f"Merged players and rookies {season}")
         df = df.merge(df_awards_target, on="Player", how="left")
-        #print(f"Merged players and awards target {season}")
-
-        print(df.columns)
 
         # === 4. Czyszczenie ===
         df[["potw_count", "potm_count", "rookie_of_month_count", "is_rookie", "target"]] = \
             df[["potw_count", "potm_count", "rookie_of_month_count", "is_rookie", "target"]].fillna(0).astype(int)
-        
-        print(f"Cleaned data {season}")
 
         df["season"] = season
         all_dfs.append(df)

@@ -24,4 +24,4 @@ def get_table_by_id(url, table_id):
     if table:
         return pd.read_html(str(table))[0]
 
-    raise ValueError(f"❌ Table with id '{table_id}' not found at {url}")
+    raise ValueError(f"Table with id '{table_id}' not found at {url}")

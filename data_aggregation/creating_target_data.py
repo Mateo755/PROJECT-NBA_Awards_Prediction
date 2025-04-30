@@ -17,7 +17,7 @@ def get_all_nba_team(season):
             break
 
     if comment_html is None:
-        print("❌ Nie znaleziono danych All-NBA.")
+        print("Nie znaleziono danych All-NBA.")
         return pd.DataFrame()
 
     section = BeautifulSoup(comment_html, "html.parser")
@@ -49,7 +49,7 @@ def get_all_rookie_team(season):
             break
 
     if comment_html is None:
-        print("❌ Nie znaleziono danych All-Rookie.")
+        print("Nie znaleziono danych All-Rookie.")
         return pd.DataFrame()
 
     section = BeautifulSoup(comment_html, "html.parser")
