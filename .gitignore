@@ -168,3 +168,12 @@ cython_debug/
 databases/
 
 csv/
+
+testing_models_results/
+testing_params/
+testing_players_results_probs/
+gt_results/
+
+debug/info_note.txt
+
+.gitattributes

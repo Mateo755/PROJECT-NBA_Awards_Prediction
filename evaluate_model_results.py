@@ -67,7 +67,7 @@ if __name__ == "__main__":
     #     sys.exit(1)
 
     pred_path = "classification_result.json"
-    truth_path = "real_results_season2023.json"
+    truth_path = "real_results_season2024.json"
 
     pred_data = load_json(pred_path)
     true_data = load_json(truth_path)

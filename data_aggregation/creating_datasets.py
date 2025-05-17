@@ -113,9 +113,12 @@ def get_teams_stats(season):
     'Rk', 'Age', 'PW', 'PL', 'Arena', 'Attend.', 'Attend./G'
     ], errors='ignore', inplace=True)
 
-    df = df[df["Team"] != "League Average"]
-    df["Team"] = df["Team"].str.replace("*", "", regex=False)
+    # Automatyczne wykrycie kolumny z nazwą drużyny
+    team_col = "Team" if "Team" in df.columns else "Tm"
 
+    df = df[df[team_col] != "League Average"]
+    df[team_col] = df[team_col].str.replace("*", "", regex=False)
+    df.rename(columns={team_col: "Team"}, inplace=True)
     df["Team"] = df["Team"].map(TEAM_NAME_MAP)
 
 
