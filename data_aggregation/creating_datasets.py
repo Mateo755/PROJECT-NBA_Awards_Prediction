@@ -38,8 +38,22 @@ TEAM_NAME_MAP = {
     "Washington Wizards": "WAS",
     "New Orleans Hornets": "NOH",
     "Charlotte Bobcats": "CHA",
-    "New Jersey Nets": "NJN"
+    "New Jersey Nets": "NJN",
+    "Seattle SuperSonics": "SEA",
+    "Vancouver Grizzlies": "VAN",
+    "New Orleans/Oklahoma City Hornets":"NOK"
 }
+
+def resolve_charlotte(team_name, season):
+    """Rozróżnia stare i nowe Charlotte Hornets na podstawie sezonu."""
+    
+    season = int(season)
+    if team_name == "Charlotte Hornets":
+        if season <= 2002:
+            return "CHH"
+        else:
+            return "CHO"
+    return TEAM_NAME_MAP.get(team_name)
 
 
 
@@ -119,7 +133,7 @@ def get_teams_stats(season):
     df = df[df[team_col] != "League Average"]
     df[team_col] = df[team_col].str.replace("*", "", regex=False)
     df.rename(columns={team_col: "Team"}, inplace=True)
-    df["Team"] = df["Team"].map(TEAM_NAME_MAP)
+    df["Team"] = df["Team"].apply(lambda name: resolve_charlotte(name, season))
 
 
 
