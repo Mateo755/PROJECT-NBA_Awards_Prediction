@@ -66,7 +66,7 @@ if __name__ == "__main__":
     #     print("Usage: python evaluate.py <predictions.json> <ground_truth.json>")
     #     sys.exit(1)
 
-    pred_path = "classification_result_2025.json"
+    pred_path = "results/classification_result_2025.json"
     truth_path = "gt_results/real_results_season2025.json"
 
     pred_data = load_json(pred_path)
