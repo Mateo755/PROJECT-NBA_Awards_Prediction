@@ -164,15 +164,12 @@ cython_debug/
 .vscode/
 .idea/
 
-
-databases/
-
 csv/
 
 testing_models_results/
 testing_params/
 testing_players_results_probs/
-gt_results/
+
 
 
 .gitattributes
